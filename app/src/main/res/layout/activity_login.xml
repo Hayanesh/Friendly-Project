@@ -9,11 +9,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.hayanesh.dsm.LoginActivity"
-    android:background="@color/bg">
+    android:background="@android:color/holo_blue_dark">
     <android.support.v7.widget.CardView
         android:id="@+id/cardview1"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
     <LinearLayout
@@ -41,28 +42,36 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:padding="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
             <EditText android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/ic_user"
                 android:inputType="textCapWords"
                 android:hint="Enter the connection ID"
-                android:theme="@style/Base.AlertDialog.AppCompat.Light" />
+                android:imeOptions="actionNext"
+                android:drawablePadding="10dp"
+                android:maxLines="1"
+                />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:padding="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp">
             <EditText android:id="@+id/pass"
+                android:drawableLeft="@mipmap/ic_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Enter the password"
+                android:imeOptions="actionNext"
+                android:drawablePadding="10dp"
+                android:maxLines="1"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -79,18 +88,23 @@
             android:id="@+id/login"
             android:layout_gravity="center_horizontal" />
 
-        <TextView
-            android:clickable="true"
-            android:textColor="@color/colourAccent"
-            android:layout_gravity="center_horizontal"
-            android:foregroundGravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:contextClickable="true"
-            android:text="Don't have an account ? SignUp "
-            android:id="@+id/noaccount" />
-
     </LinearLayout>
     </android.support.v7.widget.CardView>
+
+    <TextView
+        android:clickable="true"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_horizontal"
+        android:foregroundGravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:typeface="serif"
+        android:textStyle="italic"
+        android:textSize="18dp"
+        android:layout_marginTop="22dp"
+        android:contextClickable="true"
+        android:text="@string/signed"
+        android:id="@+id/noaccount"
+        android:layout_below="@id/cardview1"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

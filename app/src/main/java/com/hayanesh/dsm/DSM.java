@@ -132,9 +132,9 @@ public class DSM extends AppCompatActivity {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 fab.animate().translationX(-800).setInterpolator(new AccelerateInterpolator(1)).start();
-                checkedValue.clear();
-                checkedPosition.clear();
-                clearAdapter();
+               // checkedValue.clear();
+               // checkedPosition.clear();
+               // clearAdapter();
             }
 
             @Override
@@ -143,7 +143,7 @@ public class DSM extends AppCompatActivity {
                 doClick(navigationView);
                 Log.d("TAG", checkedValue.toString());
                 fab.animate().translationX(0).setInterpolator(new DecelerateInterpolator(1)).start();
-                prepareAppliances();
+               // prepareAppliances();
 
             }
         };
@@ -239,17 +239,120 @@ public class DSM extends AppCompatActivity {
         });
 
     }
-
-    public void doClick(View view) {
+    public ArrayList<String> NVcreation()
+    {
         SparseBooleanArray viewItems = navigationView.getCheckedItemPositions();
-        for (int i = 0; i < navigationView.getCount(); i++) {
-            if (viewItems.get(i)) {
-                checkedValue.add((String) navigationView.getItemAtPosition(i));
-                checkedPosition.add(i);
+        ArrayList<String> temp_value = new ArrayList<String>();
+        ArrayList<Integer> temp_pos = new ArrayList<Integer>();
+
+
+        //NV creation
+        ArrayList<String> NV = new ArrayList<String>();
+        for (int i =0;i<=navigationView.getCount();i++)
+        {
+            if(viewItems.get(i))
+            {
+                NV.add(navigationView.getItemAtPosition(i).toString());
             }
         }
+
+        //cv contains NV
+        for (int i = 0; i < navigationView.getCount(); i++) {
+            if (viewItems.get(i)) {
+                if(checkedValue.contains((String)navigationView.getItemAtPosition(i)))
+                {
+                    continue;
+                }
+                else
+                {
+                    checkedValue.add((String) navigationView.getItemAtPosition(i));
+                    checkedPosition.add(i);
+                    temp_value.add(navigationView.getItemAtPosition(i).toString());
+                    temp_pos.add(i);
+
+                }
+
+            }
+        }
+        if(appList.size() == 0)
+        {
+            prepareAppliances();
+        }
+        else {
+            addItemtoAdapter(temp_value,temp_pos);
+            temp_pos.clear();
+            temp_value.clear();
+        }
+        return NV;
+    }
+    public void doClick(View view) {
+
+        ArrayList<String> NV = NVcreation();
+
+     /*   for(int i =0 ;i<=navigationView.getCount();i++)
+        {
+            if(viewItems.get(i))
+            {
+                if(checkedValue.contains(navigationView.getItemAtPosition(i).toString()))
+                {
+                    continue;
+                }
+                else
+                {
+                    checkedValue.add(navigationView.getItemAtPosition(i).toString());
+                    checkedPosition.add(i);
+                    if(appList.isEmpty())
+                    {
+                        //Creation
+                        prepareAppliances();
+                    }
+                    else
+                    {
+                        //Insertion
+                        Appliances a = new Appliances(checkedValue.get(i).toString(),rating[checkedPosition.get(i)],null);
+                        appList.add(a);
+                        adapter.notifyItemInserted(i);
+                    }
+                }
+            }
+        }*/
+
+        //NV contains CV
+
+            for (int i=0;i<=checkedValue.size();i++)
+            {
+                try {
+                    if (NV.contains(checkedValue.get(i))) {
+                        continue;
+                    } else {
+                        System.out.println("Removed value : " + checkedValue.get(i).toString() + " " + checkedPosition.get(i).toString());
+                        checkedValue.remove(i);
+                        checkedPosition.remove(i);
+                        appList.remove(i);
+                        adapter.notifyItemRemoved(i);
+                        NV = NVcreation();
+                    }
+                }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+        }
+
+
     }
 
+    public void addItemtoAdapter(ArrayList<String> value,ArrayList<Integer> pos)
+    {
+        Appliances a;
+        for (int i = 0; i <value.size(); i++) {
+            a = new Appliances(value.get(i).toString(), rating[pos.get(i)], null);
+            appList.add(a);
+            adapter.notifyItemInserted(pos.get(i));
+        }
+
+    }
     @Override
     public void onBackPressed() {
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

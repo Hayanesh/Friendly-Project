@@ -6,15 +6,19 @@
     <TextView
         android:text="Select the appliances in use"
         android:layout_height="match_parent"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:padding="@dimen/activity_horizontal_margin"
-        android:textStyle="bold|italic"
+        android:textStyle="italic"
         android:typeface="serif"
         android:gravity="center_horizontal"
         android:layout_width="wrap_content">
     </TextView>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:alpha="0.2"
         android:background="#000000" />
+
 </LinearLayout>

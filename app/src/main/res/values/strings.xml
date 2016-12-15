@@ -37,8 +37,17 @@
     <string name="Select_applicance">Select Appliances</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_dsm">DSM</string>
+    <string name="title_activity_dsm">Appliances</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string-array name="edits_array_1">
+        <item>What is your favorite color?</item>
+        <item>When is your dad\'s birthday?</item>
+        <item>When was your first date?</item>
+        <item>Who was your childhood hero?</item>
+        <item>What is GF/BF\'s nickname?</item>
+    </string-array>
+    <string name="signed">Don\'t have an account &#63; <u>SignUp</u></string>
+    <string name="title_activity_home">Home</string>
 </resources>

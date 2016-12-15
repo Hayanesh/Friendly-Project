@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_marginTop="5dp"
     android:orientation="horizontal">
    <android.support.v7.widget.CardView
        android:layout_width="wrap_content"
        android:layout_marginLeft="10dp"
        android:layout_marginRight="10dp"
-       android:layout_height="100dp">
+       android:elevation="10dp"
+       android:layout_height="130dp">
        <RelativeLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent">
@@ -16,59 +17,84 @@
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:orientation="horizontal">
-            <ImageView
-                android:layout_width="4dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/background_grad"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/app_name"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/load_blue"
+                    android:weightSum="3"
+                    android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
                     android:text="TubeLight"
                     android:textSize="24sp"
                     android:typeface="serif"
                     android:paddingLeft="10dp"
                     android:foregroundGravity="center_vertical"
-                    android:paddingTop="5dp" />
-
+                    android:paddingTop="5dp"
+                    android:layout_weight="2"
+                    android:textColor="@android:color/background_light"
+                    />
+                <TextView
+                    android:id="@+id/wattage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="16sp"
+                    android:fontFamily="serif"
+                    android:padding="5dp"
+                    android:textColor="@android:color/white"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    />
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="-5dp">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
-                            android:layout_width="80dp"
+                            android:layout_width="145dp"
                             android:layout_height="wrap_content"
-                            android:text="Rating"
+                            android:text="Power rating"
                             android:textSize="18sp"
                             android:typeface="sans"
-                            android:textColor="@android:color/holo_orange_dark"
+                            android:textColor="@android:color/holo_blue_dark"
                             android:padding="10dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-
-                        <Spinner
-                            android:id="@+id/rating"
-                            android:layout_width="80dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="-10dp"
-                            android:entries="@array/watt">
-                        </Spinner>
-                        <TextView
-                            android:layout_marginTop="-10dp"
-                            android:text="W"
-                            android:layout_height="30dp"
-                            android:layout_width="30dp"
-                            android:padding="2dp" />
+                            <Spinner
+                                 android:id="@+id/rating"
+                                 android:layout_width="100dp"
+                                 android:foregroundTintMode="multiply"
+                                 android:color="@android:color/holo_orange_light"
+                                 android:layout_height="30dp"
+                                 android:entries="@array/watt"
+                                 android:paddingLeft="20dp"
+                                 android:layout_marginTop="-10dp"
+                                android:spinnerMode="dialog">
+                             </Spinner>
+                            <TextView
+                                android:layout_marginTop="-10dp"
+                                android:text="W"
+                                android:layout_height="wrap_content"
+                                android:layout_width="30dp"
+                                android:paddingBottom="2dp"
+                                android:textColor="@android:color/holo_orange_light"
+                                android:paddingLeft="2dp"
+                                android:layout_marginLeft="5dp" />
                         </LinearLayout>
                     </LinearLayout>
                     <LinearLayout
@@ -78,11 +104,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Qty"
+                            android:text="Quantity"
                             android:textSize="18sp"
                             android:typeface="sans"
                             android:padding="10dp"
-                            android:textColor="@android:color/holo_orange_dark" />
+                            android:textColor="@android:color/holo_blue_dark" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -91,41 +117,36 @@
                                 <EditText
                                 android:id="@+id/qty"
                                 android:inputType="number"
-                                android:layout_height="wrap_content"
-                                android:layout_width="50dp"
-                                android:layout_marginTop="-15dp" />
+                                android:layout_height="45dp"
+                                android:layout_width="70dp"
+
+                                    android:layout_marginTop="-15dp"
+
+                                    android:textAlignment="center"
+                                    android:textColorHint="@android:color/background_light"
+                                    android:textIsSelectable="false" />
                                 <TextView
                                 android:layout_marginTop="-17dp"
                                 android:text="Nos"
                                 android:layout_height="wrap_content"
                                 android:layout_width="30dp"
-                                android:paddingBottom="2dp"    />
+                                android:paddingBottom="2dp"
+                                    android:textColor="@android:color/holo_orange_light" />
                         </LinearLayout>
 
                     </LinearLayout>
 
 
                 </LinearLayout>
-                <TextView
-                    android:id="@+id/wattage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
 
-                    android:layout_marginRight="10dp"
-                    android:textSize="16sp"
-                    android:fontFamily="serif"
-                    android:padding="5dp"
-                    android:textColor="@android:color/holo_orange_light"
-                    android:layout_marginTop="-30dp"
-                    android:layout_gravity="center_vertical|end"/>
             </LinearLayout>
         </LinearLayout>
-           <ImageView
+          <ImageView
                android:id="@+id/overflow"
                android:layout_width="@dimen/ic_album_overflow_width"
                android:layout_height="@dimen/ic_album_overflow_height"
                android:layout_alignParentRight="true"
-               android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
+               android:layout_marginTop="42dp"
                android:scaleType="centerCrop"
                android:src="@drawable/ic_dot" />
        </RelativeLayout>
