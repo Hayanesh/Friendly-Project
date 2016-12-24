@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:orientation="horizontal">
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="2dp"
+    android:orientation="vertical">
    <android.support.v7.widget.CardView
        android:layout_width="wrap_content"
        android:layout_marginLeft="10dp"
        android:layout_marginRight="10dp"
-       android:elevation="10dp"
        android:layout_height="130dp">
        <RelativeLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent">
         <LinearLayout
+            android:id="@+id/linearTop"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:orientation="horizontal">
@@ -81,7 +82,7 @@
                                  android:foregroundTintMode="multiply"
                                  android:color="@android:color/holo_orange_light"
                                  android:layout_height="30dp"
-                                 android:entries="@array/watt"
+                                 android:entries="@array/qty_array"
                                  android:paddingLeft="20dp"
                                  android:layout_marginTop="-10dp"
                                 android:spinnerMode="dialog">
@@ -149,7 +150,37 @@
                android:layout_marginTop="42dp"
                android:scaleType="centerCrop"
                android:src="@drawable/ic_dot" />
+
+
+          <Button
+                 style="@style/Widget.AppCompat.Button.Borderless"
+                 android:id="@+id/save"
+                 android:layout_width="wrap_content"
+                 android:layout_height="40dp"
+                 android:textColor="@android:color/holo_blue_dark"
+                 android:layout_marginLeft="5dp"
+                 android:typeface="sans"
+                 android:textSize="18sp"
+                 android:clickable="true"
+                 android:textAlignment="textEnd"
+                 android:tag="Unchecked"
+                 android:text="Save"
+                 android:layout_alignParentRight="true"
+                 android:layout_alignParentEnd="true"
+                 android:alpha="0.6"
+                 android:layout_alignParentBottom="true"
+               android:layout_below="@+id/overflow"
+               />
+
        </RelativeLayout>
    </android.support.v7.widget.CardView>
 
+   <!-- <android.support.design.widget.FloatingActionButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/ic_done"
+        android:layout_gravity="end"
+        android:layout_marginTop="-40dp"
+        android:layout_marginRight="20dp"
+        />-->
 </LinearLayout>

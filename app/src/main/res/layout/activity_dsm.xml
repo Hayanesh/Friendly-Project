@@ -6,20 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    tools:openDrawer="right"
     android:background="?android:attr/activatedBackgroundIndicator"
-    tools:openDrawer="right">
+   >
 
     <include
         layout="@layout/app_bar_dsm"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
     <ListView
         android:id="@+id/nav_view"
         android:layout_width="220dp"
         android:layout_height="match_parent"
         android:layout_gravity="right"
         android:background="@android:color/white"
+        android:layoutMode="opticalBounds"
+        android:elevation="5dp"
         />
 
 </android.support.v4.widget.DrawerLayout>

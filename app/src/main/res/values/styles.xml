@@ -44,4 +44,9 @@
         <item name="colorPrimaryDark">#0D47A1</item>
         <item name="colorAccent">#03A9F4</item>
     </style>
+
+    <style name="CustomPopupAnimation" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/custom_anim_from_top</item>
+        <item name="android:windowExitAnimation">@anim/custom_anim_to_top</item>
+    </style>
 </resources>

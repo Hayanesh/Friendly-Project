@@ -18,13 +18,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.app.AlertDialog;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    PrefManager prefManager;
+    private String User_id = "test@mail.com";
+    Menu menu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,7 @@ public class Home extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });*/
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -65,9 +70,14 @@ public class Home extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
+        this.menu = menu;
+        MenuItem menuItem = menu.findItem(R.id.action_settings);
+        prefManager = new PrefManager(this.getApplicationContext());
+        User_id = prefManager.getUserEmail();
+        Toast.makeText(this, "ID"+User_id, Toast.LENGTH_SHORT).show();
+        menuItem.setTitle(User_id);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -128,7 +138,11 @@ public class Home extends AppCompatActivity
             alertDialog.show();*/
             return true;
         }
-
+        if(id==R.id.action_device)
+        {
+            Intent todevice = new Intent(Home.this,DeviceConnection.class);
+            startActivity(todevice);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -139,7 +153,8 @@ public class Home extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+           Intent toAPP = new Intent(Home.this,ApplianceDisplay.class);
+            startActivity(toAPP);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {

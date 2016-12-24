@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_home"
@@ -10,8 +10,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:scrollbarStyle="insideOverlay"
     tools:context="com.hayanesh.dsm.Home"
     tools:showIn="@layout/app_bar_home">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/linear1"
         android:layout_width="match_parent"
@@ -137,6 +141,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/linear1"
         android:weightSum="2"
+        android:id="@+id/linear2"
         android:orientation="horizontal">
         <android.support.v7.widget.CardView
             android:id="@+id/card_view3"
@@ -262,6 +267,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="match_parent"
+        android:layout_below="@id/linear2"
         android:elevation="5dp"
         android:layout_height="95dp">
         <TextView
@@ -270,15 +276,15 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textSize="12dp"
-            android:textStyle="bold"
             android:textColor="@color/colourPrimary"
-            android:text="LOAD STATUS :-"
-            android:elevation="5dp" />
+            android:text="Load status"
+            android:typeface="sans"
+            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginBottom="5dp"
             android:orientation="vertical">
             <LinearLayout
@@ -331,4 +337,5 @@
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>
+</ScrollView>
 

@@ -9,15 +9,30 @@ import java.lang.reflect.Array;
 public class Appliances {
     String name = null;
     String[] rating = null;
-    String qty = null;
+    int qty = 0;
+    int shiftable =0;
     //boolean selected = false;
-    public Appliances(String name,String[] rating,String qty)
+    public Appliances()
+    {
+
+    }
+    public Appliances(String name,String[] rating,int qty,int shiftable)
     {
         super();
         this.name = name;
         this.rating = rating.clone();
         this.qty = qty;
+        this.shiftable = shiftable;
     }
+    public Appliances(String name,String[] rating,int qty)
+    {
+        super();
+        this.name = name;
+        this.rating = rating.clone();
+        this.qty = qty;
+        this.shiftable = 0;
+    }
+
 
     public void setName(String name)
     {
@@ -33,8 +48,11 @@ public class Appliances {
     {
         this.qty = qty;
     }
-
-    public String getQty()
+    public void setQty(int qty)
+    {
+        this.qty = qty;
+    }
+    public int getQty()
     {
         return qty;
     }
@@ -49,4 +67,11 @@ public class Appliances {
         return rating;
     }
 
+    public void setShiftable(int shiftable) {
+        this.shiftable = shiftable;
+    }
+
+    public int getShiftable() {
+        return shiftable;
+    }
 }

@@ -28,10 +28,10 @@
         <item>Bharathappuzha (Nila)</item>
         <item>Yamuna</item>
     </string-array>
-    <string-array name="watt">
-        <item>100W</item>
-        <item>250W</item>
-        <item>400W</item>
+    <string-array name="qty_array">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
     </string-array>
     <string name="Add_applicance">Add Appliances</string>
     <string name="Select_applicance">Select Appliances</string>
@@ -50,4 +50,5 @@
     </string-array>
     <string name="signed">Don\'t have an account &#63; <u>SignUp</u></string>
     <string name="title_activity_home">Home</string>
+    <string name="title_activity_device_connection">DeviceConnection</string>
 </resources>

@@ -8,9 +8,18 @@
     android:background="@android:color/holo_blue_dark"
     android:scrollbarStyle="insideOverlay"
     tools:context="com.hayanesh.dsm.RegistrationActivity">
+
 <android.support.design.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <com.rey.material.widget.ProgressView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:pv_autostart="true"
+        app:pv_circular="true"
+        android:layout_gravity="center"
+        app:pv_progressStyle="@style/Material.Drawable.CircularProgress"
+        app:pv_progressMode="indeterminate"/>
     <include layout="@layout/content_registration" />
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -23,7 +32,7 @@
         android:elevation="5dp"
         app:fabSize="normal"
         app:layout_anchor="@id/cardview1"
-        app:layout_anchorGravity="bottom|right"
+        app:layout_anchorGravity="bottom|center"
         app:backgroundTint="?attr/colorAccent" />
 
 </android.support.design.widget.CoordinatorLayout>

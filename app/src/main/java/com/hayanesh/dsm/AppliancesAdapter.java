@@ -17,15 +17,20 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.reginald.editspinner.EditSpinner;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -36,21 +41,34 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
 
     private Context mContext;
     private List<Appliances> appList;
+    List<Integer> qt;
+    List<String> rating;
     int w = 0,q = 0;
-
+    String selected_watt;
+    String selected_qty;
+    String selected_name;
+    String selected_shift;
+    String shiftable[] = new String[]{"(Non - Shiftable Appliance )","( Shiftable Appliance )"};
+    DatabaseHelper db;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
-        public ImageView overflow;
-        public Spinner spinner;
-        public EditText editText;
+        public ImageButton remove;
+        public EditSpinner rating;
+        public EditSpinner editText;
         public TextView watt;
+        public Button save;
+        public TextView shift;
+
         public MyViewHolder(View view) {
             super(view);
+            db = new DatabaseHelper(view.getContext().getApplicationContext());
             title = (TextView) view.findViewById(R.id.app_name);
-            editText = (EditText) view.findViewById(R.id.qty);
-            spinner = (Spinner)view.findViewById(R.id.rating);
+            editText = (EditSpinner) view.findViewById(R.id.qty);
+            rating = (EditSpinner) view.findViewById(R.id.rating);
             watt = (TextView)view.findViewById(R.id.wattage);
-            overflow = (ImageView) view.findViewById(R.id.overflow);
+            remove = (ImageButton) view.findViewById(R.id.overflow);
+            shift = (TextView)view.findViewById(R.id.shift_textView);
+           // save = (Button)view.findViewById(R.id.save);
         }
     }
 
@@ -58,22 +76,46 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
     public AppliancesAdapter(Context mContext, List<Appliances> appList) {
         this.mContext = mContext;
         this.appList = appList;
+        qt = new LinkedList<>();
+        rating = new LinkedList<>();
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.appliance_info, parent, false);
+                .inflate(R.layout.appliance_info2, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         Appliances appliances = appList.get(position);
+        Log.d("IN Adapter",""+appliances.getShiftable());
         holder.title.setText(appliances.getName());
-        holder.spinner.setAdapter(new ArrayAdapter<String>(mContext,android.R.layout.simple_list_item_activated_1,appliances.getRating()));
+        holder.shift.setText(shiftable[appliances.getShiftable()]);
+        holder.rating.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, appliances.getRating()));
+        holder.editText.setAdapter(new ArrayAdapter<String>(mContext,android.R.layout.simple_dropdown_item_1line,mContext.getResources().getStringArray(R.array.qty_array)));
+
+        holder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selected_name = holder.title.getText().toString();
+                appList.remove(holder.getAdapterPosition());
+                //this.notifyAll();
+                notifyItemRemoved(holder.getAdapterPosition());
+                // v.setTag(String.valueOf(position));
+                Appliances a=new Appliances(selected_name,new String[]{null},0);
+                db.updateAppobj(a);
+
+                if(mContext instanceof DSM){
+                    ((DSM)mContext).removeItem(selected_name);
+                    ((DSM)mContext).changeUnit();
+                }
+
+            }
+        });
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -87,34 +129,96 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
 
             @Override
             public void afterTextChanged(Editable s) {
-                String selected_watt = holder.spinner.getSelectedItem().toString();
-                String selected_qty = holder.editText.getText().toString();
-                w = Integer.parseInt(selected_watt);
-                if(selected_qty.equals(""))
+                int si;
+                selected_watt = holder.rating.getText().toString();
+                selected_qty = holder.editText.getText().toString();
+                selected_name = holder.title.getText().toString();
+                selected_shift = holder.shift.getText().toString();
+                if(selected_shift.equals(shiftable[0]))
                 {
+                  si = 0 ;
+                }
+                else {
+                    si =1;
+                }
+                try {
+                    q = Integer.parseInt(selected_qty);
+                }catch (NumberFormatException e)
+                {
+
+                    Log.e("Q value",""+q);
                     q = 0;
                 }
-                else
-                {
-                    q = Integer.parseInt(selected_qty);
-                }
-                if(w*q == 0)
-                {
-                    holder.watt.setText("");
-                }
-                else
-                {
-                    holder.watt.setText(w*q+" W");
-                }
 
+                if (selected_watt.equals("")) {
+                    w = 0;
+                } else {
+                    w = Integer.parseInt(selected_watt);
+                }
+                if (w * q == 0) {
+                    holder.watt.setText("");
+                } else {
+                    holder.watt.setText(w * q + " W");
+                }
+                // qt.add(position,Integer.parseInt(selected_qty));
+                Appliances a=new Appliances(selected_name,new String[]{selected_watt},q,si);
+                db.updateAppobj(a);
             }
         });
 
-        holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        holder.rating.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int si;
+                selected_watt = holder.rating.getText().toString();
+                selected_qty = holder.editText.getText().toString();
+                selected_name = holder.title.getText().toString();
+                selected_shift = holder.shift.getText().toString();
+                if(selected_shift.equals(shiftable[0]))
+                {
+                    si = 0 ;
+                }
+                else {
+                    si =1;
+                }
+                try{
+                    w = Integer.parseInt(selected_watt);
+                }catch (NumberFormatException e)
+                {
+
+                    Log.d("W value"," "+w);
+                    w = 0;
+                }
+                if (selected_qty.equals("")) {
+                    q = 0;
+                } else {
+                    q = Integer.parseInt(selected_qty);
+                }
+                if (w * q == 0) {
+                    holder.watt.setText("");
+                } else {
+                    holder.watt.setText(w * q + " W");
+                }
+                Appliances a=new Appliances(selected_name,new String[]{selected_watt},q,si);
+                db.updateAppobj(a);
+            }
+        });
+    }
+       /* holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected_watt = parent.getItemAtPosition(position).toString();
-                String selected_qty = holder.editText.getText().toString();
+                selected_watt = parent.getItemAtPosition(position).toString();
+                selected_qty = holder.editText.getText().toString();
                 w = Integer.parseInt(selected_watt);
                 if(selected_qty.equals(""))
                 {
@@ -132,33 +236,34 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
                 {
                     holder.watt.setText(w*q+" W");
                 }
+              //  rating.add(position,selected_watt);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
-        holder.overflow.setOnClickListener(new View.OnClickListener() {
+      /*  holder.overflow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showPopupMenu(holder.overflow);
                 }
-            });
-    }
+            });}*/
+
 
     /**
      * Showing popup menu when tapping on 3 dots
      */
-    private void showPopupMenu(View view) {
+   /* private void showPopupMenu(View view) {
         // inflate menu
         PopupMenu popup = new PopupMenu(mContext, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu, popup.getMenu());
         popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
         popup.show();
-    }
+    }*/
 
     /**
      * Click listener for popup menu items
@@ -179,6 +284,7 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
             return false;
         }
     }
+
 
     @Override
     public int getItemCount() {

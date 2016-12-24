@@ -7,6 +7,11 @@
         android:title="test@gmail.com"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_device"
+        android:orderInCategory="100"
+        android:title="Connect to meter"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="Log Out"
