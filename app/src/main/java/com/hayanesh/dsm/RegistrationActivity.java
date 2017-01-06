@@ -54,7 +54,7 @@ public class RegistrationActivity extends AppCompatActivity {
     ImageButton profile_pic;
     String _id,_name, _email,_phone,_aphone,_address,_locality,_category, _type,_pass,_pin;
     DatabaseHelper db;
-    final String URL = "http://192.168.1.6/DSM/UserCreation.php";
+    final String URL = "http://192.168.1.4/DSM/UserCreation.php";
     RequestQueue requestQueue;
     StringRequest request;
     final static int RESULT_LOAD_IMAGE = 222;
@@ -87,10 +87,7 @@ public class RegistrationActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(str_image != null)
-                {
-                    prefManager.setUserPic(str_image);
-                }
+
                 if(validate())
                 {
 
@@ -225,7 +222,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return valid;
 
     }
-    public void getdata()
+    public void CreateApp()//Initial insertion
     {
         ArrayList<Appliances> appList = new ArrayList<Appliances>();
         String[] residential_app = {"Tubelight",
@@ -307,14 +304,21 @@ public class RegistrationActivity extends AppCompatActivity {
             progressDialog.dismiss();
             if(isRegistered)
             {
-                getdata();
+                CreateApp();
                 //prefManager.setFirstTimeLaunch(false);
                 prefManager.setUserEmail(_email);
                 prefManager.setUserName(_name);
                 prefManager.setUserId(_id);
-                Intent toload = new Intent(RegistrationActivity.this,DSM.class);
-                toload.putExtra("Category",_category);
-                startActivity(toload);
+                prefManager.setUserCat(_category);
+                prefManager.setFirstTimeLaunch(false);
+                if(str_image != null)
+                {
+                    prefManager.setUserPic(str_image);
+                }
+                finish();
+                Intent toHome = new Intent(RegistrationActivity.this,Home.class);
+               // toload.putExtra("Category",_category);
+                startActivity(toHome);
             }
 
         }
@@ -328,10 +332,10 @@ public class RegistrationActivity extends AppCompatActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.names().get(0).equals("success"))
                             {
-                               // Toast.makeText(RegistrationActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-
                                 //Local Database Storing
-                                Details details = new Details(Integer.parseInt(_id),_name,_email,_pass,_phone,_locality,_pin,_category,_type);
+                                Details details = new Details(_id,_name,_email,_pass,_phone,_aphone,_address,_locality,_category,_type,_pin);
+                                db.DeleteDetails();
+                                db.DeleteAppliances();
                                 db.createDetails(details);
                                 isRegistered = true;
 

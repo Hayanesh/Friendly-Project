@@ -10,13 +10,12 @@
     tools:showIn="@layout/app_bar_dsm">
 
     <android.support.v7.widget.RecyclerView
-
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:elevation="10dp"
-        android:layout_marginBottom="60dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_marginBottom="50dp"
         android:scrollbars="vertical" />
 
 </RelativeLayout>

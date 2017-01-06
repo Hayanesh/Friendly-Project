@@ -20,6 +20,8 @@ public class PrefManager {
     private static final String USER_NAME = "UserName";
     private static final String USER_PIC = "UserPic";
     private static final String USER_ID = "UserId";
+    private static final String USER_CAT = "UserCat";
+    private static final String MODE = "Mode";
     //Constructor
     public PrefManager(Context context){
         this._context = context;
@@ -70,5 +72,23 @@ public class PrefManager {
 
     public String getUserId() {
         return pref.getString(USER_ID,"0000");
+    }
+
+    public String getUserCat() {
+        return pref.getString(USER_CAT,"Residential");
+    }
+
+    public void setUserCat(String userCat) {
+        editor.putString(USER_CAT,userCat);
+        editor.commit();
+    }
+
+    public void setMODE(Boolean mode) {
+        editor.putBoolean(MODE,mode);
+        editor.commit();
+    }
+
+    public Boolean getMODE() {
+        return pref.getBoolean(MODE,false);
     }
 }

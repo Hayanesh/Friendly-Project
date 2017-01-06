@@ -1,5 +1,6 @@
 package com.hayanesh.dsm;
 
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +22,9 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.stetho.Stetho;
@@ -31,7 +34,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
@@ -39,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView no_account;
     private EditText id,password;
     private String _id,_pass;
-    private String URL = "http://192.168.1.6/DSM/Authentication.php";
+    private String URL = "http://192.168.1.4/DSM/Authentication.php";
     RequestQueue requestQueue;
     StringRequest request;
     PrefManager prefManager;
@@ -48,12 +53,15 @@ public class LoginActivity extends AppCompatActivity {
     final static String KEY_NAME = "name";
     final static String KEY_EMAIL = "email";
     final static String KEY_PHONE = "phone";
+    final static String KEY_ALTPHONE = "alt_phone";
     final static String KEY_ADDRESS = "address";
     final static String KEY_LOCALITY = "locality";
     final static String KEY_PINCODE = "pincode";
     final static String KEY_CATEGORY = "category";
     final static String KEY_TYPE = "type";
     final static String KEY_PASS = "password";
+    int cat_choice = 0;
+    String[] selected_cat_appliances;
     DatabaseHelper db;
     Boolean isRetrived = false;
     @Override
@@ -68,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Welcome New User", Toast.LENGTH_SHORT).show();
         }
         else {
+            finish();
             Intent homeIntent = new Intent(LoginActivity.this,Home.class);
             startActivity(homeIntent);
         }
@@ -95,19 +104,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if(validate())
-                {
-                    if(isNetworkConnected())
-                    {
-                        new AuthenticateAsync().execute();
-                    }
-                    else
-                    {
-                        Snackbar.make((RelativeLayout)findViewById(R.id.activity_login),"Connect to network",Snackbar.LENGTH_LONG).show();
-                    }
-                  //  prefManager.setFirstTimeLaunch(false);
-
+                if(validate()) {
+                  new AuthenticateAsync().execute();
                 }
+
 
             }
         });
@@ -160,7 +160,9 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.dismiss();
             if(isRetrived)
             {
-                Intent toHome = new Intent(getApplication(),Home.class);
+                prefManager.setFirstTimeLaunch(false);
+                finish();
+                Intent toHome = new Intent(LoginActivity.this,Home.class);
                 startActivity(toHome);
             }else {
                 Snackbar.make((RelativeLayout)findViewById(R.id.activity_login),"Invalid login credentials",Snackbar.LENGTH_LONG).show();
@@ -173,28 +175,51 @@ public class LoginActivity extends AppCompatActivity {
             request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    Log.d("response",response+"response");
                     try {
-                        Log.d("response",response);
+
                         JSONObject jsonObject = new JSONObject(response);
                         if(jsonObject.names().get(0).equals("success"))
                         {
-                            JSONObject content = jsonObject.getJSONObject("success");
-                            int id =  Integer.parseInt(content.getString(KEY_ID));
+                            Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                            JSONArray complete_arr = jsonObject.getJSONArray("success");
+                            JSONObject user_content = complete_arr.getJSONObject(0);
+                            JSONObject content = user_content.getJSONObject("user");
+
+                            String id =  content.getString(KEY_ID);
                             String name = content.getString(KEY_NAME);
                             String email = content.getString(KEY_EMAIL);
+                            String password =content.getString(KEY_PASS);
                             String phone = content.getString(KEY_PHONE);
+                            String alt_phone = content.getString(KEY_ALTPHONE);
+                            String address = content.getString(KEY_ADDRESS);
                             String locality = content.getString(KEY_LOCALITY);
                             String pin = content.getString(KEY_PINCODE);
                             String cat =  content.getString(KEY_CATEGORY);
                             String type =  content.getString(KEY_TYPE);
-                            Details detail = new Details(id,name,email,null,phone,locality,pin,cat,type);
+                            Details detail = new Details(id,name,email,password,phone,alt_phone,address,locality,cat,type,pin);
                             db.createDetails(detail);
                             prefManager.setUserEmail(email);
                             prefManager.setUserName(name);
-                            prefManager.setUserId(String.valueOf(id));
+                            prefManager.setUserId(id);
+                            prefManager.setUserCat(cat);
                             isRetrived = true;
+                            CreateApp();
                             Log.d("TAG","success"+String.valueOf(id));
-
+                            JSONObject app_obj = complete_arr.getJSONObject(1);
+                            JSONArray app = app_obj.getJSONArray("app");
+                            for(int i = 0;i<app.length();i++)
+                            {
+                                JSONObject app_i = app.getJSONObject(i);
+                                String app_name = app_i.getString("appliance");
+                                String app_rate = app_i.getString("rating");
+                                int app_qty = app_i.getInt("qty");
+                                int app_shiftable = app_i.getInt("shiftable");
+                                Log.d("Appliance",app_name +" "+app_qty+" "+app_rate+" "+app_shiftable);
+                                Appliances appliances = new Appliances(app_name,new String[]{app_rate},app_qty,app_shiftable);
+                                db.updateAppobj(appliances);
+                            }
+                            prefManager.setMODE(true);
                         }
                         else {
                             Log.d("TAG","unsuccessful");
@@ -207,9 +232,11 @@ public class LoginActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("TAG",error.toString());
+                    progressDialog.dismiss();
+                    Snackbar.make((RelativeLayout)findViewById(R.id.activity_login),"Network error occurred. Please try again",Snackbar.LENGTH_LONG).show();
                 }
-            }){
+            })
+            {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
 
@@ -220,17 +247,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
             requestQueue.add(request);
-
-            try {
-                Thread.sleep(1000);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
             return null;
-
-
-
         }
     }
     private boolean isNetworkConnected(){
@@ -238,5 +255,71 @@ public class LoginActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void CreateApp()//Initial insertion
+    {
+
+        String _category = prefManager.getUserCat();
+        ArrayList<Appliances> appList = new ArrayList<Appliances>();
+        String[] residential_app = {"Tubelight",
+                "Ceiling Fan",
+                "Table Fan",
+                "Computer",
+                "Dishwasher",
+                "Water Heater",
+                "Refrigerator",
+                "Air Conditioner",
+                "TV",
+                "Laptop",
+                "Microwave oven",
+                "Toaster",
+                "Vaccum Cleaner",
+                "Washing Machine",
+                "Pump Motor",
+                "Grinder",
+                "Mixer",
+                "Electric Iron"};
+        String[] commercial_app = {"Tubelight",
+                "Fan",
+                "Refrigerator",
+                "Air Conditioner",
+                "Computer",
+                "Printer",
+                "CCTV camera",
+                "Microwave Oven",
+                "Vaccum Cleaner",
+                "Water heater",
+                "Washing Machine",
+                "Coffee Maker",
+                "UPS",
+                "Ice Maker",
+                "CFL Bulb"};
+        String[] industrial_app = {"Tublelight",
+                "CFL bulb","Ceiling Fan","Table Fan","Air Conditioner","Refrigerator","CCTV camera","Coffee Maker","UPS","Vaccum Cleaner",
+                "Machine 1","Machine 2","Machine 3","Machine 4","Machine 5","Machine 6","Machine 7","Machine 8"};
+
+        if (_category.equals("Residential"))
+            cat_choice = 0;
+        else if (_category.equals("Commercial"))
+            cat_choice = 1;
+        else
+            cat_choice = 2;
+        switch (cat_choice)
+        {
+            case 0 : selected_cat_appliances = residential_app.clone();
+                break;
+            case 1 : selected_cat_appliances = commercial_app.clone();
+                break;
+            case 2 : selected_cat_appliances = industrial_app.clone();
+                break;
+
+        }
+        for(int i=0;i<selected_cat_appliances.length;i++)
+        {
+            Appliances a=new Appliances(selected_cat_appliances[i],new String[]{null},0);
+            appList.add(a);
+        }
+        db.CreateTableAppliances(appList);
     }
 }

@@ -26,13 +26,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     final static String KEY_ID = "id";
     final static String KEY_NAME = "name";
     final static String KEY_EMAIL = "email";
+    final static String KEY_PASS = "password";
     final static String KEY_PHONE = "phone";
-    // final static String KEY_ADDRESS = "address";
+    final static String KEY_ALTPHONE = "alt_phone";
+    final static String KEY_ADDRESS = "address";
     final static String KEY_LOCALITY = "locality";
     final static String KEY_PINCODE = "pincode";
     final static String KEY_CATEGORY = "category";
     final static String KEY_TYPE = "type";
-    final static String KEY_PASS = "password";
+
 
     //Appliances column
     final static String KEY_APPLIANCE = "appliance";
@@ -40,9 +42,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     final static String KEY_RATE = "rating";
     final static String KEY_SHIFT = "shiftable";
 
-    final static String CREATE_TABLE_DETAILS = "CREATE TABLE " + DETAILS_TABLE + "(" + KEY_ID + " INTERGER PRIMARY KEY, " + KEY_NAME + " TEXT, "
-            + KEY_EMAIL + " TEXT, " + KEY_PASS + " TEXT, " + KEY_PHONE + " TEXT, " + KEY_LOCALITY + " TEXT, "
-            + KEY_PINCODE + " TEXT, " + KEY_CATEGORY + " TEXT, " + KEY_TYPE + " TEXT " + ")";
+    final static String CREATE_TABLE_DETAILS = "CREATE TABLE " + DETAILS_TABLE + "(" + KEY_ID + " TEXT PRIMARY KEY, " + KEY_NAME + " TEXT, "
+            + KEY_EMAIL + " TEXT, " + KEY_PASS + " TEXT, " + KEY_PHONE + " TEXT, "+ KEY_ALTPHONE + " TEXT, " + KEY_ADDRESS + " TEXT, "+ KEY_LOCALITY + " TEXT, "
+            + KEY_CATEGORY + " TEXT, " + KEY_TYPE + " TEXT, " + KEY_PINCODE + " TEXT "+ ")";
 
     final static String CREATE_TABLE_APPLIANCES = "CREATE TABLE " + APPLIANCES_TABLE + "(" + KEY_ID + " INTERGER PRIMARY KEY, " + KEY_APPLIANCE + " TEXT, "
             + KEY_QTY + " INTEGER, " + KEY_RATE + " TEXT, " + KEY_SHIFT + " INTEGER " +")";
@@ -76,6 +78,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_PINCODE, details.getPin());
         values.put(KEY_CATEGORY, details.getCategory());
         values.put(KEY_TYPE, details.getType());
+        values.put(KEY_ADDRESS,details.getAddress());
+        values.put(KEY_ALTPHONE,details.getAlt_phone());
         long details_id = db.insert(DETAILS_TABLE, null, values);
 
         db.close();
@@ -86,22 +90,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(DETAILS_TABLE, new String[]{KEY_ID,
-                        KEY_NAME, KEY_EMAIL, KEY_PHONE, KEY_LOCALITY, KEY_CATEGORY, KEY_TYPE}, KEY_EMAIL + "=?",
+                        KEY_NAME, KEY_EMAIL,KEY_PASS, KEY_PHONE,KEY_ALTPHONE,KEY_ADDRESS,KEY_LOCALITY, KEY_CATEGORY, KEY_TYPE,KEY_PINCODE}, KEY_ID + "=?",
                 new String[]{id}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
-        Details details = new Details(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1), cursor.getString(2), null, cursor.getString(3), cursor.getString(4), null, cursor.getString(5), cursor.getString(6));
+        Details details = new Details(cursor.getString(0),
+                cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4),cursor.getString(5), cursor.getString(6),cursor.getString(7),cursor.getString(8),cursor.getString(9),
+        cursor.getString(10));
         // return contact
         return details;
 
 
     }
 
-    public void DeleteDetails(Details det) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.delete(DETAILS_TABLE, KEY_ID + " = ?", new String[]{String.valueOf(det.getId())});
+    public void DeleteDetails() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(DETAILS_TABLE,null,null);
+
+    }
+    public void DeleteAppliances()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(APPLIANCES_TABLE,null,null);
     }
 
     public void updateAppobj(Appliances a) {

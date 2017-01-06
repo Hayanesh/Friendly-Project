@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,7 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         prefManager = new PrefManager(this.getApplicationContext());
-        user_pic = (ImageButton)findViewById(R.id.user_profile_photo);
+        user_pic = (ImageButton) findViewById(R.id.user_profile_photo);
         shift = (TextView)findViewById(R.id.shift_id);
         nshift = (TextView)findViewById(R.id.non_shift_id);
         initView();
@@ -61,15 +62,22 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-
+        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.edit_fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toedit = new Intent(UserProfile.this,EditProfile.class);
+                startActivity(toedit);
+            }
+        });
 
 
     }
     public void initView()
     {
-        Glide.with(this).load(R.drawable.profile_bg).asBitmap().centerCrop().into((ImageView) findViewById(R.id.header_cover_image));
-        String email = prefManager.getUserEmail();
-        Log.d("EMAIL",email);
+       // Glide.with(this).load(R.drawable.profile_bg).asBitmap().centerCrop().into((ImageView) findViewById(R.id.header_cover_image));
+        String cid = prefManager.getUserId();
+        Log.d("!D",cid);
         try {
             if(prefManager.getUserPic() == null)
             {
@@ -94,7 +102,7 @@ public class UserProfile extends AppCompatActivity {
         }
         db = new DatabaseHelper(getApplicationContext());
         Details d1 = new Details();
-        d1 = db.getDetails(email);
+        d1 = db.getDetails(cid);
         System.out.println(d1.getId()+" "+d1.getName()+" "+d1.getEmail()+" "+d1.getPass()+" "+d1.getPhone()+" "+d1.getLocality()+" "+d1.getCategory()+" "+d1.getType()  );
         name = (TextView)findViewById(R.id.user_name_display);
         id = (TextView)findViewById(R.id.cname);
@@ -103,9 +111,9 @@ public class UserProfile extends AppCompatActivity {
         category = (TextView)findViewById(R.id.c_cat);
         locality = (TextView)findViewById(R.id.c_locality);
         user_email = (TextView)findViewById(R.id.email);
-        String _name = "Hello, "+d1.getName();
+        String _name = d1.getName();
         try {
-            user_email.setText(email);
+            user_email.setText(d1.getEmail());
             name.setText(_name);
             id.setText(String.valueOf(d1.getId()));
             phone.setText(d1.getPhone());

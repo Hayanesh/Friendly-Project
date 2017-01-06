@@ -38,5 +38,6 @@ dependencies {
     compile 'com.weiwangcn.betterspinner:library:1.1.0'
     compile 'com.github.sd6352051.niftydialogeffects:niftydialogeffects:1.0.0@aar'
     compile 'com.facebook.stetho:stetho:1.4.2'
+    compile 'com.github.zagum:Android-ExpandIcon:1.1.1'
     compile project(':library')
 }

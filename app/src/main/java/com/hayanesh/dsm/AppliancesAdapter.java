@@ -1,6 +1,7 @@
 package com.hayanesh.dsm;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
@@ -23,9 +24,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.reginald.editspinner.EditSpinner;
 
@@ -50,6 +53,7 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
     String selected_shift;
     String shiftable[] = new String[]{"(Non - Shiftable Appliance )","( Shiftable Appliance )"};
     DatabaseHelper db;
+    PrefManager prefManager;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public ImageButton remove;
@@ -58,7 +62,6 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
         public TextView watt;
         public Button save;
         public TextView shift;
-
         public MyViewHolder(View view) {
             super(view);
             db = new DatabaseHelper(view.getContext().getApplicationContext());
@@ -68,6 +71,8 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
             watt = (TextView)view.findViewById(R.id.wattage);
             remove = (ImageButton) view.findViewById(R.id.overflow);
             shift = (TextView)view.findViewById(R.id.shift_textView);
+
+
            // save = (Button)view.findViewById(R.id.save);
         }
     }
@@ -91,7 +96,7 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        Appliances appliances = appList.get(position);
+        final Appliances appliances = appList.get(position);
         Log.d("IN Adapter",""+appliances.getShiftable());
         holder.title.setText(appliances.getName());
         holder.shift.setText(shiftable[appliances.getShiftable()]);
@@ -211,6 +216,7 @@ public class AppliancesAdapter extends RecyclerView.Adapter<AppliancesAdapter.My
                 }
                 Appliances a=new Appliances(selected_name,new String[]{selected_watt},q,si);
                 db.updateAppobj(a);
+
             }
         });
     }

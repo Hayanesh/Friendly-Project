@@ -21,22 +21,23 @@
             <ImageView
                 android:id="@+id/header_cover_image"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:scaleType="centerCrop" />
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/blue_gradient" />
             <ImageButton
                 android:id="@+id/user_profile_photo"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_below="@+id/header_cover_image"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="-90dp"
                 android:background="@drawable/profile_circular_border_imageview"
-                android:elevation="5dp"
+                android:elevation="24dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/men_comic"
-                android:clickable="true" />
+                android:clickable="true"
+                android:layout_marginTop="-180dp" />
             <android.support.v7.widget.CardView
-                android:id="@+id/card_view"
+                android:id="@+id/app_icon"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_below="@id/header_cover_image">
@@ -47,9 +48,9 @@
                     android:orientation="horizontal">
                     <LinearLayout
                         android:orientation="vertical"
-                        android:background="@color/load_pink"
-                        android:layout_weight="1.15"
-                        android:layout_width="wrap_content"
+                        android:background="@color/load_blue"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent">
                     <TextView
                         android:layout_width="match_parent"
@@ -71,9 +72,9 @@
                     </LinearLayout>
                     <LinearLayout
                         android:orientation="vertical"
-                        android:background="@color/load_blue"
+                        android:background="@color/colorPrimary"
                         android:layout_weight="1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <TextView
                             android:layout_width="match_parent"
@@ -104,11 +105,12 @@
                 android:layout_marginTop="-25dp"
                 app:fabSize="normal"
                 app:srcCompat="@mipmap/ic_edit"
-                android:layout_below="@+id/card_view"
-                android:layout_centerHorizontal="true" />
+                android:layout_below="@+id/app_icon"
+                android:layout_centerHorizontal="true"
+                app:backgroundTint="@color/colourAccent" />
             <android.support.v7.widget.CardView
                 android:layout_margin="10dp"
-                android:layout_below="@id/card_view"
+                android:layout_below="@id/app_icon"
                 android:layout_width="match_parent"
                 android:layout_height="240dp">
                 <TextView
@@ -288,18 +290,20 @@
             </android.support.v7.widget.CardView>
 
             <TextView
-                android:text="Hello, Hayanesh"
-                android:gravity="center"
-                android:layout_width="wrap_content"
+                android:text="Hayanesh"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:id="@+id/user_name_display"
                 android:typeface="serif"
-                android:textStyle="italic"
-                android:textSize="30sp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:textColor="@android:color/white" />
+                android:textSize="26sp"
+                android:layout_centerInParent="true"
+                android:textColor="@android:color/holo_blue_bright"
+                android:layout_below="@id/user_profile_photo"
+                android:visibility="visible"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textStyle="normal|bold|italic"
+                android:alpha="0.3" />
         </RelativeLayout>
         </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

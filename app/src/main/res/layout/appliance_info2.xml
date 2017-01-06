@@ -7,20 +7,19 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="fill_parent"
         android:layout_height="170dp"
-        app:cardCornerRadius="5dp"
-        android:layout_margin="10dp"
-        >
+        card_view:cardUseCompatPadding="true"
+        app:cardPreventCornerOverlap="false">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
           <android.support.v7.widget.CardView
-
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 app:cardBackgroundColor="@color/load_blue"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="0dp"
                 android:fadingEdge="horizontal"
               android:elevation="3dp">
 
@@ -49,9 +48,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="63dp"
+                android:layout_marginLeft="70dp"
                 android:orientation="vertical"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:elevation="5dp">
 
                 <TextView
                     android:text="Appliances"
@@ -62,7 +62,7 @@
                     android:padding="5dp"
                     android:id="@+id/app_name"
                     android:layout_gravity="right"
-                    android:textColor="?android:attr/textColorHint"
+                    android:textColor="?attr/colorPrimaryDark"
                     android:textAllCaps="false" />
 
                 <TextView
@@ -71,8 +71,9 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/shift_textView"
                     android:textSize="14sp"
-                    android:textColor="#cccccc"
-                    android:typeface="sans" />
+                    android:textColor="@color/load_pink"
+                    android:typeface="sans"
+                    android:textStyle="normal|italic" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -86,7 +87,9 @@
                         android:text="Rating"
                         android:padding="5dp"
                         android:textColor="@android:color/darker_gray"
-                        android:layout_width="100dp" />
+                        android:layout_width="100dp"
+                        android:typeface="normal"
+                        android:allowUndo="false" />
                   <!-- <Spinner
                         android:layout_weight="1.5"
                         android:layout_height="wrap_content"
@@ -101,15 +104,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textColorHint="#aa828282"
-                        android:textSize="18dp"
+                        android:textSize="14dp"
                         android:padding="5dp"
                         app:dropDownDrawableSpacing="15dp"
                         app:dropDownDrawableWidth="25dp"
                         app:dropDownDrawableHeight="25dp"
                         app:dropDownDrawable="@drawable/picker"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@android:color/holo_orange_light"
                         android:textAlignment="center"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:typeface="monospace" />
+
                    <!-- <com.weiwangcn.betterspinner.library.BetterSpinner
                         android:ems="10"
                         android:layout_weight="1.5"
@@ -164,15 +169,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:textColorHint="#aa828282"
-                        android:textSize="18dp"
+                        android:textSize="14dp"
                         android:padding="5dp"
                         app:dropDownDrawableSpacing="15dp"
                         app:dropDownDrawableWidth="25dp"
                         app:dropDownDrawableHeight="25dp"
                         app:dropDownDrawable="@drawable/picker"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@android:color/holo_orange_light"
                         android:textAlignment="center"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:typeface="monospace" />
                     <TextView
 
                         android:layout_width="50dp"
@@ -195,17 +201,19 @@
                     android:layout_marginLeft="8dp"
                     android:layout_gravity="start"
                     android:textColor="@android:color/darker_gray" />
-                <TextView
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_gravity="start"
-                    android:textColor="@color/colourPrimary"
-                    android:id="@+id/wattage"
-                    android:textSize="@dimen/fab_margin" />
-            </LinearLayout>
+
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_gravity="start"
+                        android:textColor="@color/colorAccent"
+                        android:id="@+id/wattage"
+                        android:textSize="@dimen/fab_margin"
+                        android:typeface="monospace" />
+                </LinearLayout>
         </LinearLayout>
             <ImageButton
                 android:id="@+id/overflow"
@@ -215,7 +223,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/ic_cancel_black_24dp"
-                android:alpha="0.2" />
+                android:alpha="0.1"
+                android:visibility="visible" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

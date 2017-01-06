@@ -3,6 +3,7 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:background="@color/colourPrimary"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/footer_below"
     android:elevation="10dp"
     android:layout_gravity="bottom"
     android:weightSum="2"

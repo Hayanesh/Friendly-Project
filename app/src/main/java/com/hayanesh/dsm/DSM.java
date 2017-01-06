@@ -6,7 +6,10 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,7 +67,7 @@ public class DSM extends AppCompatActivity {
     PrefManager prefManager;
     RequestQueue requestQueue;
     JSONArray jsonArray;
-    String URL = "http://192.168.1.6/DSM/ApplianceStore.php";
+    String URL = "http://192.168.1.4/DSM/ApplianceStore.php";
     JsonObjectRequest request;
     String res_rating[][]  =  new String[][]{{"0","0"},{"100", "60"}, {"25", "50", "75"}, {"10", "25"},{"100","200","450"},
             {"1200","1300","1500"},{"2000","2500","3000"},{"150","200","400"},{"1000","2000","4000"},{"150","200"},
@@ -84,12 +87,7 @@ public class DSM extends AppCompatActivity {
     int[] ind_shift = {0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,1,1,1,1};
     int [] shiftable = {};
     String rating[][];
-    public static boolean[] residential_app_sel = {false,
-            false, false, false, false, false, false,
-            false, false, false, false, false, false,
-            false, false, false, false, false,};
-    ListView navigationView;
-
+    ListView navigationView;//This is appliance listview
     RecyclerView recyclerView;
     ArrayList<Appliances> appList;
     AppliancesAdapter adapter;
@@ -104,7 +102,6 @@ public class DSM extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         prefManager = new PrefManager(this.getApplicationContext());
         title = (LinearLayout)findViewById(R.id.list_title);
         units = (TextView)findViewById(R.id.units);
@@ -113,7 +110,7 @@ public class DSM extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         try
         {
-            String cat = this.getIntent().getStringExtra("Category");
+            String cat = prefManager.getUserCat();
             if (cat.equals("Residential"))
                 cat_choice = 0;
             else if (cat.equals("Commercial"))
@@ -130,6 +127,7 @@ public class DSM extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         appList = new ArrayList<>();
+
         adapter = new AppliancesAdapter(this, appList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
@@ -139,7 +137,6 @@ public class DSM extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -159,34 +156,40 @@ public class DSM extends AppCompatActivity {
 
                 //store the above to server...
                 new AppliancAsync().execute();
-                Intent toHome = new Intent(DSM.this,Home.class);
-                 startActivity(toHome);
+                finish();
+                Intent toViewApp = new Intent(DSM.this,ApplianceDisplay.class);
+                startActivity(toViewApp);
+
+                //Intent toHome = new Intent(DSM.this,Home.class);
+                // startActivity(toHome);
             }
         });
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer,tb, R.string.app_name, R.string.app_name) {
+        ActionBarDrawerToggle toggle;
+            toggle = new ActionBarDrawerToggle(
+                    this, drawer,tb, R.string.app_name, R.string.app_name) {
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-               // checkedValue.clear();
-               // checkedPosition.clear();
-               // clearAdapter();
-            }
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    // checkedValue.clear();
+                    // checkedPosition.clear();
+                    // clearAdapter();
+                }
 
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                doClick(navigationView);
-                Log.d("TAG", checkedValue.toString());
-                changeUnit();
-               // prepareAppliances();
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
+                    doClick(navigationView);
+                    Log.d("TAG", checkedValue.toString());
+                    changeUnit();
+                    // prepareAppliances();
 
-            }
-        };
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        displayListView();
+                }
+            };
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+            displayListView();
+
 
 
     }
@@ -267,8 +270,9 @@ public class DSM extends AppCompatActivity {
         navigationView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         LayoutInflater inflater = getLayoutInflater();
         ViewGroup header = (ViewGroup)inflater.inflate(R.layout.snippet_header,navigationView, false);
-        ViewGroup footer = (ViewGroup)inflater.inflate(R.layout.snippet_footer,navigationView, false);
+      //  ViewGroup footer = (ViewGroup)inflater.inflate(R.layout.snippet_footer,navigationView, false);
         navigationView.addHeaderView(header, null, false);
+        LinearLayout footer = (LinearLayout)findViewById(R.id.footer_below);
       //  navigationView.addFooterView(footer,null,false);
         checkedValue = new ArrayList<String>();
         checkedPosition = new ArrayList<Integer>();
@@ -427,7 +431,6 @@ public class DSM extends AppCompatActivity {
             case R.id.action_cancel :
                 drawer.openDrawer(Gravity.RIGHT);
                 break;
-
            //     return true;
         }
 
@@ -546,79 +549,20 @@ public class DSM extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
            progressDialog.setMessage("Storing in Database...");
-           progressDialog.show();
+//           progressDialog.show();
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-           progressDialog.dismiss();
+            prefManager.setMODE(true);
+           // progressDialog.dismiss();
+
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            String id = prefManager.getUserId();
-            List<Appliances> retrived_app = new ArrayList<Appliances>();
-            retrived_app = db.getAppliances();
-            jsonArray = new JSONArray();
-            for(int i =0;i<retrived_app.size();i++)
-            {
-                Appliances appliances = retrived_app.get(i);
-                try {
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("connection_id",id);
-                    jsonObject.put("appliance",appliances.getName());
-                    jsonObject.put("rating",appliances.getRating()[0]);
-                    jsonObject.put("qty",appliances.getQty());
-                    jsonObject.put("shiftable",appliances.getShiftable());
-                    jsonArray.put(jsonObject);
-                }catch (JSONException e)
-                {
-                    Log.e("JSON",e.toString());
-                }
-            }
-            JSONObject app_json = new JSONObject();
-            try {
-                app_json.put("AppList",jsonArray);
-                Log.d("JSON LIST",app_json.toString());
-            }catch (Exception e)
-            {
-                Log.e("JSON",e.toString());
-            }
-            request = new JsonObjectRequest(Request.Method.POST, URL, app_json, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try
-                    {
-                        if(response.names().get(0).equals("success"))
-                        {
-                            Toast.makeText(DSM.this, "Success", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(DSM.this, "Cant reach", Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (JSONException e)
-                    {
-                       Log.e("Json",e.toString());
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                        Log.d("JSON","error");
-                }
-            }){
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    headers.put( "charset", "utf-8");
-                    return headers;
-                }
-            };
-            requestQueue.add(request);
-            //Handle network event here
+            networkStore();
             try {
                 Thread.sleep(1000);
             }catch (Exception e)
@@ -629,6 +573,72 @@ public class DSM extends AppCompatActivity {
         }
     }
 
+
+    public void networkStore()
+    {
+        String id = prefManager.getUserId();
+        List<Appliances> retrived_app = new ArrayList<Appliances>();
+        retrived_app = db.getAppliances();
+        jsonArray = new JSONArray();
+        for(int i =0;i<retrived_app.size();i++)
+        {
+            Appliances appliances = retrived_app.get(i);
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("connection_id",id);
+                jsonObject.put("appliance",appliances.getName());
+                jsonObject.put("rating",appliances.getRating()[0]);
+                jsonObject.put("qty",appliances.getQty());
+                jsonObject.put("shiftable",appliances.getShiftable());
+                jsonArray.put(jsonObject);
+            }catch (JSONException e)
+            {
+                Log.e("JSON",e.toString());
+            }
+        }
+        JSONObject app_json = new JSONObject();
+        try {
+            app_json.put("AppList",jsonArray);
+            Log.d("JSON LIST",app_json.toString());
+        }catch (Exception e)
+        {
+            Log.e("JSON",e.toString());
+        }
+        request = new JsonObjectRequest(Request.Method.POST, URL, app_json, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try
+                {
+                    if(response.names().get(0).equals("success"))
+                    {
+                        Toast.makeText(DSM.this, "Success", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(DSM.this, "Cant reach", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (JSONException e)
+                {
+                    Log.e("Json",e.toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("JSON","error");
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put( "charset", "utf-8");
+                return headers;
+            }
+        };
+        requestQueue.add(request);
+
+    }
 
    /* @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

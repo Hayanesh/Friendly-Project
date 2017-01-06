@@ -5,11 +5,10 @@ package com.hayanesh.dsm;
  */
 
 public class Details {
-    int id;
-    String name, email,phone,locality,category, type,pass,pin;
+    String id,name, email,pass,phone,alt_phone,address,locality,category, type,pin;
 
     public  Details() {}
-    public Details(int id,String name,String email,String pass,String phone,String locality,String pin,String category,String type)
+    public Details(String id,String name,String email,String pass,String phone,String alt_phone,String address,String locality,String category,String type,String pin)
     {
         this.id = id;
         this.name = name;
@@ -20,13 +19,15 @@ public class Details {
         this.type = type;
         this.pass = pass;
         this.pin = pin;
+        this.alt_phone  = alt_phone;
+        this.address = address;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -92,5 +93,21 @@ public class Details {
 
     public void setPin(String pin) {
         this.pin = pin;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAlt_phone() {
+        return alt_phone;
+    }
+
+    public void setAlt_phone(String alt_phone) {
+        this.alt_phone = alt_phone;
     }
 }

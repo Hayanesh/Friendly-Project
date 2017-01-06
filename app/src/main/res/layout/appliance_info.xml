@@ -4,20 +4,22 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="2dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
    <android.support.v7.widget.CardView
        android:layout_width="wrap_content"
-       android:layout_marginLeft="10dp"
-       android:layout_marginRight="10dp"
-       android:layout_height="130dp">
+
+       android:layout_height="wrap_content"
+       android:animateLayoutChanges="false">
        <RelativeLayout
            android:layout_width="match_parent"
            android:layout_height="match_parent">
         <LinearLayout
             android:id="@+id/linearTop"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:clickable="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,23 +27,43 @@
                 android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/load_blue"
+                    android:layout_height="45dp"
+                    android:background="?selectableItemBackground"
                     android:weightSum="3"
-                    android:orientation="horizontal">
-                <TextView
+                    android:orientation="horizontal"
+                    android:id="@+id/linear_top">
+                    <com.github.zagum.expandicon.ExpandIconView
+                        android:id="@+id/expand_icon"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="56dp"
+                        app:eiv_animationDuration="300"
+                        app:eiv_color="#000"
+                        app:eiv_colorLess="@color/colorAccent"
+                        app:eiv_colorMore="@color/colourAccent"
+                        app:eiv_roundedCorners="false"
+                        app:eiv_switchColor="true"
+                        app:eiv_padding="8dp"/>
+                    <TextView
                     android:id="@+id/app_name"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:text="TubeLight"
-                    android:textSize="24sp"
-                    android:typeface="serif"
-                    android:paddingLeft="10dp"
+                    android:textSize="20sp"
+                    android:typeface="sans"
                     android:foregroundGravity="center_vertical"
-                    android:paddingTop="5dp"
                     android:layout_weight="2"
-                    android:textColor="@android:color/background_light"
-                    />
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:clickable="false"
+                    android:elevation="7dp"
+                    android:drawablePadding="20dp"
+                    android:padding="6dp"
+                    android:layout_marginLeft="5dp"
+                    android:drawableTintMode="multiply"
+                    android:drawableTint="@drawable/circle_thin_shape"
+                    android:paddingLeft="5dp"
+                    android:hapticFeedbackEnabled="false" />
                 <TextView
                     android:id="@+id/wattage"
                     android:layout_width="wrap_content"
@@ -50,7 +72,7 @@
                     android:textSize="16sp"
                     android:fontFamily="serif"
                     android:padding="5dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/holo_orange_light"
                     android:layout_weight="1"
                     android:gravity="right"
                     />
@@ -59,24 +81,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="-5dp">
+                    android:visibility="gone"
+                    android:id="@+id/app_below"
+                    android:background="@color/bg"
+                    android:layout_marginTop="-5dp"
+                    android:paddingLeft="10dp"
+                    android:alpha="0.0">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
-                            android:layout_width="145dp"
+                            android:layout_width="120dp"
                             android:layout_height="wrap_content"
-                            android:text="Power rating"
+                            android:text="Rating"
                             android:textSize="18sp"
                             android:typeface="sans"
-                            android:textColor="@android:color/holo_blue_dark"
+                            android:textColor="@color/btn_press_color"
                             android:padding="10dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            <Spinner
+                          <!--  <Spinner
                                  android:id="@+id/rating"
                                  android:layout_width="100dp"
                                  android:foregroundTintMode="multiply"
@@ -86,14 +113,23 @@
                                  android:paddingLeft="20dp"
                                  android:layout_marginTop="-10dp"
                                 android:spinnerMode="dialog">
-                             </Spinner>
+                             </Spinner>-->
+                            <EditText
+                                android:id="@+id/rate"
+                                android:inputType="number"
+                                android:layout_height="45dp"
+                                android:layout_width="70dp"
+                                android:layout_marginTop="-15dp"
+                                android:textAlignment="center"
+                                android:textColorHint="@android:color/holo_orange_light"
+                                android:textIsSelectable="false" />
                             <TextView
                                 android:layout_marginTop="-10dp"
                                 android:text="W"
                                 android:layout_height="wrap_content"
                                 android:layout_width="30dp"
                                 android:paddingBottom="2dp"
-                                android:textColor="@android:color/holo_orange_light"
+                                android:textColor="@color/btn_press_color"
                                 android:paddingLeft="2dp"
                                 android:layout_marginLeft="5dp" />
                         </LinearLayout>
@@ -109,7 +145,7 @@
                             android:textSize="18sp"
                             android:typeface="sans"
                             android:padding="10dp"
-                            android:textColor="@android:color/holo_blue_dark" />
+                            android:textColor="@color/btn_press_color" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -124,7 +160,7 @@
                                     android:layout_marginTop="-15dp"
 
                                     android:textAlignment="center"
-                                    android:textColorHint="@android:color/background_light"
+                                    android:textColorHint="@android:color/holo_orange_light"
                                     android:textIsSelectable="false" />
                                 <TextView
                                 android:layout_marginTop="-17dp"
@@ -132,45 +168,35 @@
                                 android:layout_height="wrap_content"
                                 android:layout_width="30dp"
                                 android:paddingBottom="2dp"
-                                    android:textColor="@android:color/holo_orange_light" />
+                                    android:textColor="@color/btn_press_color" />
                         </LinearLayout>
 
                     </LinearLayout>
 
-
+                    <Button
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:id="@+id/save"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/darker_gray"
+                        android:layout_marginLeft="5dp"
+                        android:typeface="sans"
+                        android:textSize="18sp"
+                        android:clickable="true"
+                        android:textAlignment="center"
+                        android:tag="Unchecked"
+                        android:text="Save"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:hapticFeedbackEnabled="true" />
                 </LinearLayout>
+
+
 
             </LinearLayout>
         </LinearLayout>
-          <ImageView
-               android:id="@+id/overflow"
-               android:layout_width="@dimen/ic_album_overflow_width"
-               android:layout_height="@dimen/ic_album_overflow_height"
-               android:layout_alignParentRight="true"
-               android:layout_marginTop="42dp"
-               android:scaleType="centerCrop"
-               android:src="@drawable/ic_dot" />
 
 
-          <Button
-                 style="@style/Widget.AppCompat.Button.Borderless"
-                 android:id="@+id/save"
-                 android:layout_width="wrap_content"
-                 android:layout_height="40dp"
-                 android:textColor="@android:color/holo_blue_dark"
-                 android:layout_marginLeft="5dp"
-                 android:typeface="sans"
-                 android:textSize="18sp"
-                 android:clickable="true"
-                 android:textAlignment="textEnd"
-                 android:tag="Unchecked"
-                 android:text="Save"
-                 android:layout_alignParentRight="true"
-                 android:layout_alignParentEnd="true"
-                 android:alpha="0.6"
-                 android:layout_alignParentBottom="true"
-               android:layout_below="@+id/overflow"
-               />
 
        </RelativeLayout>
    </android.support.v7.widget.CardView>
