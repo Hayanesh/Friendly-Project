@@ -1,7 +1,6 @@
 package com.hayanesh.dsm;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -20,19 +19,14 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,11 +47,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
-import com.rey.material.widget.ProgressView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.hayanesh.dsm.app.Config.serverIp;
 
 public class ApplianceDisplay extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView Name;
@@ -66,7 +61,7 @@ public class ApplianceDisplay extends AppCompatActivity implements NavigationVie
     JSONArray jsonArray;
     RequestQueue requestQueue;
     JsonObjectRequest request;
-    String URL = "http://192.168.1.4/DSM/ApplianceStore.php";
+    String URL = "http://"+ serverIp +"/DSM/ApplianceStore.php";
     ArrayList<Appliances> appliances;
     RecyclerView recyclerView2;
     AppliancesDashAdapter appliancesDashAdapter;
@@ -220,7 +215,7 @@ public class ApplianceDisplay extends AppCompatActivity implements NavigationVie
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("JSON","error");
+                Log.d("JSON",error.toString());
             }
         }){
             @Override

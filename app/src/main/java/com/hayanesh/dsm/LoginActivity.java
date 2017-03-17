@@ -1,6 +1,5 @@
 package com.hayanesh.dsm;
 
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,29 +21,27 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.stetho.Stetho;
 import com.rey.material.widget.ProgressView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import static com.hayanesh.dsm.app.Config.serverIp;
 
 public class LoginActivity extends AppCompatActivity {
     private Button login;
     private TextView no_account;
     private EditText id,password;
     private String _id,_pass;
-    private String URL = "http://192.168.1.4/DSM/Authentication.php";
+    private String URL = "http://"+ serverIp +"/DSM/Authentication.php";
     RequestQueue requestQueue;
     StringRequest request;
     PrefManager prefManager;
@@ -233,6 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     progressDialog.dismiss();
+                    Log.e("Error",error.toString());
                     Snackbar.make((RelativeLayout)findViewById(R.id.activity_login),"Network error occurred. Please try again",Snackbar.LENGTH_LONG).show();
                 }
             })

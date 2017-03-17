@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "481799563157",
+    "firebase_url": "https://dsmfirebase.firebaseio.com",
+    "project_id": "dsmfirebase",
+    "storage_bucket": "dsmfirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481799563157:android:9eac0d38ab74562e",
+        "android_client_info": {
+          "package_name": "com.hayanesh.dsm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481799563157-als62pgmft3q245hv013p90m3rjl906o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hayanesh.dsm",
+            "certificate_hash": "0793410f9bc12658ee63f3aeb3352e6ec4c08a69"
+          }
+        },
+        {
+          "client_id": "481799563157-ickcadfon8ha9fs04phhi2bs0e4eb615.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hayanesh.dsm",
+            "certificate_hash": "b86f562642597b037bba5fe98ff7b5dcb926ef8c"
+          }
+        },
+        {
+          "client_id": "481799563157-e27ai36dlg7cu57nlh3hs22fbb4lh4pg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUYNe68CxH-Aq54marq6-aSyZfVmSWkhE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481799563157-e27ai36dlg7cu57nlh3hs22fbb4lh4pg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,10 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +39,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.rey.material.widget.ProgressView;
 
@@ -56,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hayanesh.dsm.app.Config.serverIp;
+
 public class DSM extends AppCompatActivity {
     ArrayList<String> checkedValue;
     ArrayList<Integer> checkedPosition;
@@ -67,7 +65,7 @@ public class DSM extends AppCompatActivity {
     PrefManager prefManager;
     RequestQueue requestQueue;
     JSONArray jsonArray;
-    String URL = "http://192.168.1.4/DSM/ApplianceStore.php";
+    String URL = "http://"+ serverIp +"/DSM/ApplianceStore.php";
     JsonObjectRequest request;
     String res_rating[][]  =  new String[][]{{"0","0"},{"100", "60"}, {"25", "50", "75"}, {"10", "25"},{"100","200","450"},
             {"1200","1300","1500"},{"2000","2500","3000"},{"150","200","400"},{"1000","2000","4000"},{"150","200"},
@@ -625,7 +623,7 @@ public class DSM extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("JSON","error");
+                Log.d("JSON",error.toString());
             }
         }){
             @Override

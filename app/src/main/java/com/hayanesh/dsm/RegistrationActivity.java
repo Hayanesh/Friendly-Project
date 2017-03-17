@@ -9,23 +9,18 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -46,6 +41,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.hayanesh.dsm.app.Config.serverIp;
+
 public class RegistrationActivity extends AppCompatActivity {
     private Spinner category;
     private RadioButton rb;
@@ -54,7 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
     ImageButton profile_pic;
     String _id,_name, _email,_phone,_aphone,_address,_locality,_category, _type,_pass,_pin;
     DatabaseHelper db;
-    final String URL = "http://192.168.1.4/DSM/UserCreation.php";
+    final String URL = "http://"+ serverIp +"/DSM/UserCreation.php";
     RequestQueue requestQueue;
     StringRequest request;
     final static int RESULT_LOAD_IMAGE = 222;

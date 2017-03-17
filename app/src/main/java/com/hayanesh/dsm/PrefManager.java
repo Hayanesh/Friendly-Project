@@ -22,6 +22,9 @@ public class PrefManager {
     private static final String USER_ID = "UserId";
     private static final String USER_CAT = "UserCat";
     private static final String MODE = "Mode";
+    private static final String RegID = "regId";
+    private static final String MIN = "min";
+    private static final String MAX = "max";
     //Constructor
     public PrefManager(Context context){
         this._context = context;
@@ -88,7 +91,35 @@ public class PrefManager {
         editor.commit();
     }
 
+    public void setRegID(String regID)
+    {
+        editor.putString(RegID,regID);
+        editor.commit();
+    }
+    public String getRegID()
+    {
+        return pref.getString(RegID,"0000");
+    }
     public Boolean getMODE() {
         return pref.getBoolean(MODE,false);
+    }
+
+    public int getMin()
+    {
+        return pref.getInt(MIN,0);
+    }
+    public void setMin(int min)
+    {
+        editor.putInt(MIN,min);
+        editor.commit();
+    }
+    public int getMax()
+    {
+        return pref.getInt(MAX,0);
+    }
+    public void setMax(int max)
+    {
+        editor.putInt(MAX,max);
+        editor.commit();
     }
 }

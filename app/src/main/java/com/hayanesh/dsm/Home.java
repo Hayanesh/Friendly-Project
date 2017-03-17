@@ -1,21 +1,20 @@
 package com.hayanesh.dsm;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.drawable.GradientDrawable;
-import android.media.effect.Effect;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,11 +25,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.app.AlertDialog;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.hayanesh.dsm.app.Config;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,7 +42,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.hayanesh.dsm.util.NotificationUtils;
 import com.rey.material.widget.ProgressView;
+import com.tapadoo.alerter.Alerter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,18 +57,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hayanesh.dsm.app.Config.serverIp;
+
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     PrefManager prefManager;
+    private DatabaseReference mDatabase;
     private String User_id = "test@mail.com";
     private TextView user_name,user_email;
     private ImageView user_pic;
     private TextView minLoad,maxLoad,load_status;
-    public String URL = "http://192.168.1.4/DSM/MinMaxStore.php";
+    public String URL = "http://"+ serverIp +"/DSM/MinMaxStore.php";
     RequestQueue requestQueue;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
     Menu menu;
     DatabaseHelper db;
     DrawerLayout drawer;
+    List<Appliances> appl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,22 +84,32 @@ public class Home extends AppCompatActivity
         prefManager = new PrefManager(this.getApplicationContext());
         requestQueue = Volley.newRequestQueue(this);
         db = new DatabaseHelper(getApplicationContext());
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         minLoad = (TextView)findViewById(R.id.min);
         maxLoad = (TextView)findViewById(R.id.max);
-        final List<Appliances> appl = db.getAppliances();
+        if(prefManager.getMin()!=0 && prefManager.getMax()!=0)
+        {
+            minLoad.setText(prefManager.getMin()+" W");
+            maxLoad.setText(prefManager.getMax()+" W");
+        }
         load_status = (TextView)findViewById(R.id.load_status);
         load_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                appl = db.getAppliances();
                 if(appl.size()>0)
                 {
-                    getMinMax(appl);
-                    new MinMaxAsync().execute();
-                }
+                    if(getMinMax(appl))
+                    {
+                        new MinMaxAsync().execute();
+                    }
 
-                //Handle network store
+                }
             }
         });
+
+
+                //Handle network store
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -124,9 +144,40 @@ public class Home extends AppCompatActivity
                     startActivity(toView);
             }
         });
-    }
+        //Alert();
+        mRegistrationBroadcastReceiver = new BroadcastReceiver(){
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
 
-    public void getMinMax(List<Appliances> appliances)
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    String message = intent.getStringExtra("message");
+                    //Toast.makeText(context, "Message "+message, Toast.LENGTH_SHORT).show();
+                    Alert(message);
+
+
+                    // txtMessage.setText(message);
+                }
+            }
+        };
+    }
+    public void Alert(String message)
+    {
+        Alerter.create(this)
+                .setTitle("Usage limit exceeded")
+                .setText("Current load : "+message)
+                .setBackgroundColor(R.color.colourAccent)
+                .setDuration(10000)
+                .show();
+    }
+    public boolean getMinMax(List<Appliances> appliances)
     {
         int min = 0,max =0;
         for(int i=0;i<appliances.size();i++)
@@ -142,8 +193,22 @@ public class Home extends AppCompatActivity
             }
         }
         max += min;
+        Log.d("MAX",""+max);
+        Log.d("MIN",""+min);
         minLoad.setText(String.valueOf(min)+" W");
         maxLoad.setText(String .valueOf(max)+" W");
+        if(prefManager.getMin()!=min || prefManager.getMax()!=max)
+        {
+            prefManager.setMax(max);
+            prefManager.setMin(min);
+            return true;
+        }
+        else
+        {
+            prefManager.setMax(max);
+            prefManager.setMin(min);
+            return false;
+        }
     }
     public int CalculateUnit(String rat,int qty)
     {
@@ -275,7 +340,7 @@ public class Home extends AppCompatActivity
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressDialog.setMessage("Fetching details..");
+            progressDialog.setMessage("Synchronizing...");
             progressDialog.show();
         }
 
@@ -285,7 +350,12 @@ public class Home extends AppCompatActivity
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(final Void... params) {
+
+            //Firebase Db
+            mDatabase.child("Consumers").child(prefManager.getUserId()).setValue(db.getDetails(prefManager.getUserId()));
+            mDatabase.child("Consumers").child(prefManager.getUserId()).child("id").removeValue();
+
             StringRequest request = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -318,11 +388,40 @@ public class Home extends AppCompatActivity
                     map.put("min",minLoad.getText().toString());
                     map.put("max",maxLoad.getText().toString());
                     map.put("id",prefManager.getUserId());
+                    map.put("regId",prefManager.getRegID());
+
+                    //Firebase DB
+                    mDatabase.child("Consumers").child(prefManager.getUserId()).child("Load Status").setValue(map);
+                    mDatabase.child("Consumers").child(prefManager.getUserId()).child("Load Status").child("id").removeValue();
+
                     return map;
                 }
             };
             requestQueue.add(request);
             return null;
         }
+    }
+
+    @Override
+    protected void onResume() {
+
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 }
